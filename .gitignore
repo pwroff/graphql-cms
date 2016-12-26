@@ -1,3 +1,7 @@
-node_modules
-build
-.idea/
+.idea
+/node_modules
+/build
+npm-debug.*
+*.sqlite3
+.DS_Store
+.tmp/
