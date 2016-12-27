@@ -34,18 +34,18 @@ app.use((...args) => websiteMiddleware(...args));
 
 server = http.createServer(app);
 
-const io = require('socket.io')(server);
-io.on('connection', (client)=> {
-    client.on('mutate', (data)=> {
-        client.emit('update', {msg: `New Message \n ${data.msg} \n at ${new Date(Date.now())}`})
-    });
-    client.on('receive', (data) => {
-
-    });
-    client.on('disconnect', function () {
-    });
-    client.emit('update', {msg: `Connected at ${new Date(Date.now())}`})
-});
+// const io = require('socket.io')(server);
+// io.on('connection', (client)=> {
+//     client.on('mutate', (data)=> {
+//         client.emit('update', {msg: `New Message \n ${data.msg} \n at ${new Date(Date.now())}`})
+//     });
+//     client.on('receive', (data) => {
+//
+//     });
+//     client.on('disconnect', function () {
+//     });
+//     client.emit('update', {msg: `Connected at ${new Date(Date.now())}`})
+// });
 
 server.listen(port, () => {
     log.info(`API is now running on port ${port}`);

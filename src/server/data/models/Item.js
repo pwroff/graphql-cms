@@ -2,6 +2,7 @@
  * Created by Leonid on 27/12/16.
  */
 import Mongoose from 'mongoose';
+Mongoose.connect('mongodb://localhost/graph-cms');
 
 const ItemSchema = Mongoose.Schema({
     title: String,

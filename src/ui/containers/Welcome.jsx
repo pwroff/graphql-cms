@@ -2,10 +2,11 @@
  * Created by Leonid on 26/12/16.
  */
 import React, {Component} from 'react';
-import io from 'socket.io-client';
 import {Row, ListGroup, ListGroupItem, Col, Button, FormGroup, FormControl} from 'react-bootstrap';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 
-export default class Welcome extends Component {
+class Welcome extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,8 +17,6 @@ export default class Welcome extends Component {
     }
 
     componentDidMount() {
-        this._io = io();
-        this._io.on('update', this._handleUpdate);
     }
 
     _handleUpdate(data) {
@@ -33,28 +32,49 @@ export default class Welcome extends Component {
         });
 
         return (
-            <Row>
-                <Col><h2>List of messages</h2></Col>
-                <Col xs={12} md={6} >
-                    <ListGroup>
-                        {ms}
-                    </ListGroup>
-                </Col>
-                <Col xs={12} md={6}>
-                    <FormGroup bsSize='large'>
-                        <FormControl type="text" placeholder="Your message goes here" value={this.state.msg} onChange={(e)=>{
-                            this.setState({msg: e.target.value});
-                        }}/>
-                    </FormGroup>
-                    <Button bsStyle='primary' onClick={()=>{
-                        const {msg} = this.state;
-                        this._io.emit('receive', {query: msg});
-                        this.setState({msg: ''})
-                    }}>
-                        Send Message
-                    </Button>
-                </Col>
-            </Row>
+            <div>
+                <Row>
+                    <Col><h2>List of messages</h2></Col>
+                </Row>
+                {this._getFetchedData()}
+            </div>
         )
     }
+
+    _getFetchedData() {
+        const {loading, items} = this.props.data;
+        if (loading) {
+            return <Row><h2>Loading data...</h2></Row>
+        } else {
+
+            const its = items.map(it => {
+                return(
+                    <Col xs={12} md={6} key={it.id}>
+                        <ListGroup >
+                            <ListGroupItem>{it.title}</ListGroupItem>
+                            <ListGroupItem onClick={()=>{}}>{it.type}</ListGroupItem>
+                        </ListGroup>
+                    </Col>
+                )
+            });
+            return (
+                <Row>
+                    {its}
+                </Row>
+            )
+        }
+    }
 }
+
+// Initialize GraphQL queries or mutations with the `gql` tag
+const MyQuery = gql`query Items {
+    items {
+        id
+        title
+        type
+    }
+}`;
+
+// We then can use `graphql` to pass the query results returned by MyQuery
+// to MyComponent as a prop (and update them as the results change)
+export default graphql(MyQuery)(Welcome);
