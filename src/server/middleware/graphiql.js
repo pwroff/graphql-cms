@@ -4,8 +4,9 @@ export default graphiqlExpress({
   endpointURL: '/graphql',
   query:
    '{\n' +
-   '  count {\n' +
-   '    amount\n' +
+   '  items {\n' +
+   '    title\n' +
+   '    type\n' +
    '  }\n' +
    '}'
 });

@@ -1,29 +1,48 @@
-# Database counter
-type Count {
-  # Current amount
-  amount: Int!
+# Represents Item List
+type Item {
+  id: String
+  title: String
+  text: String
+  image: String
+  active: Boolean
+  views: Int
+  price: Float
+  height: Int
+  width: Int
+  radius: Int
+  brand: String
+  type: String
+  variant: String
+  car: String
+  dco: Float
+  pcd: String
+  et: Float
+  condition: String
+  vehicle: String
 }
 
 type Query {
-  # Counter
-  count: Count
-}
-
-type Mutation {
-  # Increase counter value, returns current counter amount
-  addCount(
-    # Amount to add to counter
-    amount: Int!
-  ): Count
-}
-
-type Subscription {
-  # Subscription fired when anyone increases counter
-  countUpdated(ids: String): Count
+  # Items
+  items(
+  title: String
+  height: Int
+  width: Int
+  radius: Int
+  brand: String
+  type: String
+  variant: String
+  car: String
+  dco: Float
+  pcd: String
+  et: Float
+  active: Boolean
+  condition: String
+  vehicle: String
+  ): [Item]
+  # Single item
+  item(id: String): Item
 }
 
 schema {
   query: Query
-  mutation: Mutation
-  subscription: Subscription
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Row } from 'react-bootstrap'
 import classnames from 'classnames'
+import Welcome from '../containers/Welcome';
 
 import NavBar from './nav_bar'
 
@@ -21,6 +22,7 @@ export default function App({ children }) {
   return (
     <div>
       <div className="container">
+          <Welcome/>
         {children}
       </div>
       <footer className={classnames('container', css(styles.footer))}>

@@ -36,4 +36,4 @@ counter value updated there as well, because counter is live updated via subscri
 1. Deploy your app on Heroku
 
 ## License
-Copyright © 2016 [Leonid Lazaryev <>leonidlazaryev@gmail.com]. This source code is licensed under the [MIT] license.
+Copyright © 2016 Leonid Lazaryev <leonidlazaryev@gmail.com>. This source code is licensed under the MIT license.
