@@ -7,74 +7,131 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
 class Welcome extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            msgs: [],
-            msg: ''
-        };
-        this._handleUpdate = this._handleUpdate.bind(this);
-    }
-
-    componentDidMount() {
-    }
-
-    _handleUpdate(data) {
-        const {msgs} = this.state;
-        msgs.push(data.msg);
-        this.setState({msgs})
+            selectedFilters: {
+                type: null,
+                width: null,
+                height: null,
+                radius: null
+            }
+        }
     }
 
     render() {
-
-        const ms = this.state.msgs.map((m, i) => {
-            return <ListGroupItem key={i}>{m}</ListGroupItem>
-        });
-
-        return (
-            <div>
-                <Row>
-                    <Col><h2>List of messages</h2></Col>
-                </Row>
-                {this._getFetchedData()}
-            </div>
-        )
+        return this._getFetchedData();
     }
 
     _getFetchedData() {
-        const {loading, items} = this.props.data;
+        const {loading, items} = this.props;
         if (loading) {
-            return <Row><h2>Loading data...</h2></Row>
+            return <Row>
+                <Col xs={12} className='text-center'><h2>Loading...</h2></Col>
+            </Row>
         } else {
+
+            const cP = {
+                xs: 6, sm:4, md:3
+            };
+
 
             const its = items.map(it => {
                 return(
-                    <Col xs={12} md={6} key={it.id}>
+                    <Col {...cP} key={it.id}>
                         <ListGroup >
                             <ListGroupItem>{it.title}</ListGroupItem>
-                            <ListGroupItem onClick={()=>{}}>{it.type}</ListGroupItem>
+                            <ListGroupItem onClick={this._updateFilter.bind(this, {type:it.type})}>{it.type}</ListGroupItem>
+                            <ListGroupItem onClick={this._updateFilter.bind(this, {width:it.width})}>Width: {it.width}</ListGroupItem>
+                            <ListGroupItem onClick={this._updateFilter.bind(this, {height:it.height})}>Height: {it.height}</ListGroupItem>
+                            <ListGroupItem onClick={this._updateFilter.bind(this, {radius:it.radius})}>R {it.radius}</ListGroupItem>
+                        </ListGroup>
+                    </Col>
+                )
+            });
+
+            const {selectedFilters: sfs} = this.state;
+
+            const filters = Object.keys(sfs).map((f, i) => {
+                return sfs[f] && (
+                    <Col {...cP} key={f}>
+                        <ListGroup >
+                            <ListGroupItem>{f}</ListGroupItem>
+                            <ListGroupItem onClick={()=>{
+                                this._updateFilter({[f]:null});
+                            }}>{sfs[f]}</ListGroupItem>
                         </ListGroup>
                     </Col>
                 )
             });
             return (
+            <div>
+                <Row>
+                    <Col xs={12} className='text-center'>
+                        <h2>Selected Filters</h2>
+                    </Col>
+                </Row>
+                <Row>
+                    {filters}
+                </Row>
+                <Row>
+                    <Col xs={12} className='text-center'>
+                        <h2>List of messages</h2>
+                    </Col>
+                </Row>
                 <Row>
                     {its}
                 </Row>
+            </div>
+
             )
         }
+    }
+
+    _updateFilter(selectedFilters) {
+        selectedFilters = Object.assign({}, this.state.selectedFilters, selectedFilters);
+        this.setState({selectedFilters}, ()=>{
+            this.props.updateFilter(selectedFilters);
+        })
     }
 }
 
 // Initialize GraphQL queries or mutations with the `gql` tag
-const MyQuery = gql`query Items {
-    items {
+const MyQuery = gql`query Items($type: String, $width: Int, $height: Int, $radius: Int) {
+    items(type: $type, width: $width, height: $height, radius: $radius) {
         id
         title
         type
+        width
+        height
+        radius
     }
 }`;
 
 // We then can use `graphql` to pass the query results returned by MyQuery
 // to MyComponent as a prop (and update them as the results change)
-export default graphql(MyQuery)(Welcome);
+export default graphql(MyQuery, {
+    // This function re-runs every time `data` changes, including after `updateQuery`,
+    // meaning our loadMoreEntries function will always have the right cursor
+    props({ data: { loading, items, fetchMore } }) {
+        return {
+            loading,
+            items,
+            updateFilter: (variables) => {
+                return fetchMore({
+                    query: MyQuery,
+                    variables,
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+
+                        return {
+                            // Put the new comments at the end of the list and update `pageInfo`
+                            // so we have the new `endCursor` and `hasNextPage` values
+                            items: fetchMoreResult.data.items,
+                        };
+                    },
+                });
+            },
+        };
+    },
+})(Welcome);
