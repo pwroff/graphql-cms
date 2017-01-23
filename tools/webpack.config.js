@@ -26,7 +26,7 @@ const baseConfig = {
         exclude: /(node_modules|bower_components)/,
         query: {
           cacheDirectory: __DEV__,
-          presets: ['es2015', 'es2017', 'react'],
+          presets: ['latest'],
           plugins: ['transform-runtime', 'transform-decorators-legacy', 'transform-class-properties'],
         },
       },

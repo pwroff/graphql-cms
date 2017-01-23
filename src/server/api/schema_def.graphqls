@@ -1,48 +1,38 @@
+# Represents Division
+type Division {
+  id: String
+  title: String!
+  description: String
+  items: [Item]
+}
 # Represents Item List
 type Item {
   id: String
   title: String
-  text: String
-  image: String
-  active: Boolean
-  views: Int
-  price: Float
-  height: Int
-  width: Int
-  radius: Int
-  brand: String
-  type: String
-  variant: String
-  car: String
-  dco: Float
-  pcd: String
-  et: Float
-  condition: String
-  vehicle: String
+  division: Division
 }
-
 type Query {
   # Items
   items(
   title: String
-  height: Int
-  width: Int
-  radius: Int
-  brand: String
-  type: String
-  variant: String
-  car: String
-  dco: Float
-  pcd: String
-  et: Float
-  active: Boolean
-  condition: String
-  vehicle: String
   ): [Item]
   # Single item
   item(id: String): Item
+  # Divisions
+  divisions: [Division]
+  # Single division
+  division(id: String): Division
+}
+
+type Mutation {
+  createItem: Item
+  createDivision(
+    title: String!
+    description: String
+  ): Division
 }
 
 schema {
   query: Query
+  mutation: Mutation
 }

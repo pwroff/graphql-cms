@@ -1,4 +1,3 @@
-import Mongoose from 'mongoose';
 import casual from 'casual';
 import Item from './models/Item';
 
@@ -23,8 +22,6 @@ const count = 20,
         return casual.item_params
     },
     defModel = Item;
-
-const mongo = Mongoose.connect('mongodb://localhost/graph-cms');
 
 const seed = (model = defModel, params = defParams)=>{
     let a = model.remove();

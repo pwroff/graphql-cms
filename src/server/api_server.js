@@ -2,6 +2,8 @@ import express from 'express';
 import bodyParser from 'body-parser'
 import http from 'http'
 import path from 'path'
+import Mongoose from 'mongoose';
+Mongoose.connect('mongodb://localhost/graph-cms');
 
 import {app as settings} from '../../package.json'
 import log from '../log'
@@ -34,18 +36,18 @@ app.use((...args) => websiteMiddleware(...args));
 
 server = http.createServer(app);
 
-// const io = require('socket.io')(server);
-// io.on('connection', (client)=> {
-//     client.on('mutate', (data)=> {
-//         client.emit('update', {msg: `New Message \n ${data.msg} \n at ${new Date(Date.now())}`})
-//     });
-//     client.on('receive', (data) => {
-//
-//     });
-//     client.on('disconnect', function () {
-//     });
-//     client.emit('update', {msg: `Connected at ${new Date(Date.now())}`})
-// });
+const io = require('socket.io')(server);
+io.on('connection', (client)=> {
+    client.on('mutate', (data)=> {
+        client.emit('update', {msg: `New Message \n ${data.msg} \n at ${new Date(Date.now())}`})
+    });
+    client.on('receive', (data) => {
+
+    });
+    client.on('disconnect', function () {
+    });
+    client.emit('update', {msg: `Connected at ${new Date(Date.now())}`})
+});
 
 server.listen(port, () => {
     log.info(`API is now running on port ${port}`);
