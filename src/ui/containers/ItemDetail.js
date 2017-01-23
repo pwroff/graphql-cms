@@ -55,35 +55,35 @@ class Welcome extends Component {
 
             const filters = Object.keys(sfs).map((f, i) => {
                 return sfs[f] && (
-                    <Col {...cP} key={f}>
-                        <ListGroup >
-                            <ListGroupItem>{f}</ListGroupItem>
-                            <ListGroupItem onClick={()=>{
-                                this._updateFilter({[f]:null});
-                            }}>{sfs[f]}</ListGroupItem>
-                        </ListGroup>
-                    </Col>
-                )
+                        <Col {...cP} key={f}>
+                            <ListGroup >
+                                <ListGroupItem>{f}</ListGroupItem>
+                                <ListGroupItem onClick={()=>{
+                                    this._updateFilter({[f]:null});
+                                }}>{sfs[f]}</ListGroupItem>
+                            </ListGroup>
+                        </Col>
+                    )
             });
             return (
-            <div>
-                <Row>
-                    <Col xs={12} className='text-center'>
-                        <h2>Selected Filters</h2>
-                    </Col>
-                </Row>
-                <Row>
-                    {filters}
-                </Row>
-                <Row>
-                    <Col xs={12} className='text-center'>
-                        <h2>List of messages</h2>
-                    </Col>
-                </Row>
-                <Row>
-                    {its}
-                </Row>
-            </div>
+                <div>
+                    <Row>
+                        <Col xs={12} className='text-center'>
+                            <h2>Selected Filters</h2>
+                        </Col>
+                    </Row>
+                    <Row>
+                        {filters}
+                    </Row>
+                    <Row>
+                        <Col xs={12} className='text-center'>
+                            <h2>List of messages</h2>
+                        </Col>
+                    </Row>
+                    <Row>
+                        {its}
+                    </Row>
+                </div>
 
             )
         }
