@@ -22,18 +22,18 @@ const resolvers = {
   },
   Mutation: {
     createDivision(_, {title, description}) {
-      const d = new Division({title, description});
-      console.log('saving division', d);
+      const d = new Division({title, description, created: Date.now()});
       return new Promise((res, rej)=>{
         d.save((e, data)=>{
           if (e) {
+            log.error(e);
             rej(e);
           } else {
+            log.info('Saved new Division', data);
             res(data);
           }
         })
       });
-
     }
   },
   Division: {

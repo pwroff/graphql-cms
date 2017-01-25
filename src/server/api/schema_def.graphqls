@@ -3,6 +3,7 @@ type Division {
   id: String
   title: String!
   description: String
+  created: String
   items: [Item]
 }
 # Represents Item List
