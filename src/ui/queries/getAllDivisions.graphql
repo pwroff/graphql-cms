@@ -1,0 +1,11 @@
+query getAllDivisions{
+    divisions {
+        id
+        title
+        description
+        created
+        items {
+            title
+        }
+    }
+}

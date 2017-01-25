@@ -1,0 +1,7 @@
+mutation createDivision($title: String!, $description: String) {
+    createDivision(title: $title, description: $description) {
+        title
+        description
+        created
+    }
+}
