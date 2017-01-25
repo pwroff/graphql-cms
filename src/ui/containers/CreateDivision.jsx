@@ -3,9 +3,10 @@
  */
 import React, {Component, PropTypes} from 'react';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import createDivision from '../mutations/createDivision.graphql';
 import {Form, FormGroup, Col, Row, FormControl, Button, ControlLabel, Textarea} from 'react-bootstrap';
 
+@graphql(createDivision, {name: 'createDivision'})
 class CreateDivisionForm extends Component {
 
     constructor(...args) {
@@ -18,11 +19,18 @@ class CreateDivisionForm extends Component {
 
     submit(e) {
         e.preventDefault();
-        this.props.onSubmit(this.state);
-        this.setState({
-            title: '',
-            description: ''
-        })
+
+        this.props.createDivision({
+            variables:this.state
+        }).then((data)=>{
+            console.log('Created', data);
+            this.props.onCreate && this.props.onCreate(this.state);
+            this.setState({
+                title: '',
+                description: ''
+            })
+        });
+
     }
 
     render() {
@@ -32,7 +40,7 @@ class CreateDivisionForm extends Component {
             });
         };
         return (
-            <Row>
+            <div>
                 <h3>Create Division</h3>
                 <Form horizontal onSubmit={this.submit.bind(this)}>
                     <FormGroup controlId="formHorizontalEmail">
@@ -74,30 +82,13 @@ class CreateDivisionForm extends Component {
                         </Col>
                     </FormGroup>
                 </Form>
-            </Row>
+            </div>
         )
     }
 }
 
 CreateDivisionForm.propTypes = {
-    onSubmit: PropTypes.func.isRequired,
+    onCreate: PropTypes.func,
 };
 
-const submitDivision = gql`
-    mutation createDivision($title: String!, $description: String) {
-        createDivision(title: $title, description: $description) {
-            title
-            description
-        }
-    }
-`;
-
-const CreateDivision = graphql(submitDivision, {
-    props: ({ mutate }) => ({
-        onSubmit: ({title, description}) => {
-            mutate({ variables: { title, description} });
-        }
-    }),
-})(CreateDivisionForm);
-
-export default CreateDivision;
+export default CreateDivisionForm;

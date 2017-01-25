@@ -1,41 +1,103 @@
 import React, {Component, PropTypes} from 'react';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 import CreateDivision from '../containers/CreateDivision';
+import DivisionsList from '../containers/DivisionsList';
+import {Grid, Row} from 'react-bootstrap';
+import getAllDivisions from '../queries/getAllDivisions.graphql';
 
-const Division = ({params, onCreate}) => {
-    return (
-        <div className="page">
-            <h1>This is division {params.id}</h1>
-            <CreateDivision onSubmit={onCreate}/>
-        </div>
-    )
-};
+@graphql(getAllDivisions)
+class Divisions extends Component{
+    constructor(...args) {
+        super(...args);
 
-Division.propTypes = {
+        this.state = {
+            formOn: false
+        }
+    }
+
+    render() {
+        const {params, onCreate, data} = this.props;
+        if (data.loading) {
+            return (
+                <Grid>
+                    <Row>
+                        <h1>Loading...</h1>
+                    </Row>
+                </Grid>
+            )
+        }
+        return (
+            <div>
+                <Grid>
+                    <Row>
+                        <h1>This is division {params.id}</h1>
+                    </Row>
+                    <DivisionsList divisions={data.divisions}/>
+                </Grid>
+                <div style={
+                {
+                    position: 'fixed',
+                    top: 0,
+                    right: 0,
+                    maxWidth: '80%',
+                    height: 'auto',
+                    backgroundColor: '#fff',
+                    borderRadius: '3px',
+                    opacity: '.95',
+                    padding: '20px'
+                }
+                }>
+                    {this.createMore()}
+                </div>
+            </div>
+        )
+    }
+
+    createMore() {
+        if (this.state.formOn) {
+            return (
+                <CreateDivision onSubmit={this.props.onCreate} onCreate={()=>{
+                    this.props.data.refetch();
+                    this.setState({
+                        formOn: false
+                    })
+                }}/>
+            )
+        }
+
+        return (
+            <div
+                style={{
+                    height: '60px',
+                    width: '60px',
+                    lineHeight: '60px',
+                    borderRadius: '50%',
+                    fontSize: '20px',
+                    backgroundColor: `hsl(${180}, 94%, 50%)`,
+                    color: '#fff',
+                    textAlign: 'center',
+                    margin: '20px',
+                    boxShadow: '0 0 50px -20px rgba(0,0,0,.5)'
+                }}
+                onClick={
+                    ()=>{
+                        this.setState({
+                            formOn: true
+                        })
+                    }
+                }
+            >+</div>
+        )
+    }
+
+}
+
+Divisions.propTypes = {
+    data: PropTypes.shape({
+        loading: PropTypes.bool.isRequired,
+        divisions: PropTypes.array
+    }),
     onCreate: PropTypes.func
 };
 
-const submitDivision = gql`
-    mutation Division($title: String!, $description: String) {
-        createDivision(title: $title, description: $description) {
-            title
-            description
-            created
-        }
-    }
-`;
-
-const DivisionWithGraph = graphql(submitDivision, {
-    props: ({ ownProps, mutate }) => ({
-        onCreate: ({title, description}) => {
-            mutate(
-                {
-                    variables: { title, description}
-                }
-            );
-        }
-    }),
-})(Division);
-
-export default DivisionWithGraph;
+export default Divisions;
