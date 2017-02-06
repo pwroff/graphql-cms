@@ -5,6 +5,7 @@ import Mongoose from 'mongoose';
 
 const ItemSchema = Mongoose.Schema({
     title: String,
+    description: String,
     divisionId: String
 });
 

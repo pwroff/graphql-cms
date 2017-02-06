@@ -1,9 +1,9 @@
-import {apolloExpress} from 'apollo-server'
+import {graphqlExpress as graphql} from 'graphql-server-express'
 import 'isomorphic-fetch'
 
 import schema from '../api/schema'
 
-export default apolloExpress(() => {
+export default graphql(() => {
     return {
         schema
     };

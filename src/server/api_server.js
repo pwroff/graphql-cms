@@ -30,8 +30,8 @@ if (__DEV__) {
     app.use('/assets', express.static(path.join(settings.backendBuildDir, 'assets'), {maxAge: '180 days'}));
 }
 
-app.use('/graphql', (...args) => graphqlMiddleware(...args));
-app.use('/graphiql', (...args) => graphiqlMiddleware(...args));
+app.use('/graphql', graphqlMiddleware);
+app.use('/graphiql', graphiqlMiddleware);
 app.use((...args) => websiteMiddleware(...args));
 
 server = http.createServer(app);
