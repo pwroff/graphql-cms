@@ -1,14 +1,14 @@
 /**
  * Created by Leonid on 27/12/16.
  */
-import Mongoose from 'mongoose';
+import createModel from './createModel';
 
-const ItemSchema = Mongoose.Schema({
+const ItemSchema = {
     title: String,
     description: String,
     divisionId: String
-});
+};
 
-const Item = Mongoose.model('Item', ItemSchema);
+const Item = createModel('Item', ItemSchema);
 
 export default Item;

@@ -1,11 +1,11 @@
-import Mongoose from 'mongoose';
+import createModel from './createModel';
 
-const DivisionSchema = Mongoose.Schema({
+const DivisionSchema = {
     title: String,
     description: String,
     created: String
-});
+};
 
-const Division = Mongoose.model('Division', DivisionSchema);
+const Division = createModel('Division', DivisionSchema);
 
 export default Division;
