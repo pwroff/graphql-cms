@@ -16,25 +16,36 @@ type Item {
 type Query {
   # Items
   items(
-  title: String
+  title: String,
+  pagination: PaginationInput
   ): [Item]
   # Single item
   item(id: String): Item
   # Divisions
-  divisions: [Division]
+  divisions(pagination: PaginationInput): [Division]
   # Single division
   division(id: String): Division
 }
 
-type Mutation {
-  createItem(
+input PaginationInput {
+  skip: Int = 0
+  limit: Int = 10
+  offset: Int = 0
+}
+
+input ItemInput {
   divisionId: String
-  title: String
-  ): Item
-  createDivision(
-    title: String!
-    description: String
-  ): Division
+  title: String!
+}
+
+input DivisionInput {
+  title: String!
+  description: String
+}
+
+type Mutation {
+  createItem(params: ItemInput): Item
+  createDivision(params: DivisionInput): Division
 }
 
 schema {
